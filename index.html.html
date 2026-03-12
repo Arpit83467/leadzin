@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Leadzin Academy — Learn • Build • Earn</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080810;
+    --card: #10101A;
+    --card2: #181828;
+    --border: #252538;
+    --text: #F0F0FF;
+    --sub: #8888AA;
+    --accent: #FF6B35;
+    --purple: #7C3AED;
+    --blue: #3B82F6;
+    --green: #10B981;
+    --gold: #F59E0B;
+    --pink: #FF3584;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; justify-content: center; overflow-x: hidden; }
+  ::-webkit-scrollbar { display: none; }
+  .app { width: 100%; max-width: 430px; min-height: 100vh; position: relative; background: var(--bg); overflow: hidden; }
+
+  /* SCROLLABLE CONTENT */
+  .page-content { height: calc(100vh - 70px); overflow-y: auto; overflow-x: hidden; padding-bottom: 24px; scroll-behavior: smooth; }
+  .scroll-x { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 4px; }
+
+  /* NOTIFICATION */
+  .notif-bar { background: linear-gradient(90deg, #FF6B35, #FF3584); padding: 9px 16px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; font-weight: 700; gap: 8px; }
+  .notif-bar button { background: rgba(0,0,0,0.25); border: none; color: #fff; width: 22px; height: 22px; border-radius: 50%; font-size: 14px; cursor: pointer; flex-shrink: 0; line-height: 1; display: flex; align-items: center; justify-content: center; }
+
+  /* HEADER */
+  .header { padding: 14px 18px 8px; display: flex; align-items: center; justify-content: space-between; }
+  .logo { display: flex; align-items: center; gap: 8px; }
+  .logo-icon { width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(135deg, #FF6B35, #7C3AED); display: flex; align-items: center; justify-content: center; font-size: 17px; }
+  .logo-text { font-size: 19px; font-weight: 900; letter-spacing: -0.5px; background: linear-gradient(135deg, #FF6B35, #FF3584, #7C3AED); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .logo-tagline { font-size: 10px; color: var(--sub); margin-top: 1px; }
+  .header-right { display: flex; gap: 8px; align-items: center; }
+  .pill { background: var(--card2); border: 1px solid var(--border); border-radius: 10px; padding: 6px 12px; display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; cursor: pointer; }
+  .pill.fire { color: var(--accent); }
+  .pill.xp { color: var(--gold); }
+  .mode-btn { background: var(--card2); border: 1px solid var(--border); border-radius: 10px; padding: 6px 10px; cursor: pointer; font-size: 15px; }
+
+  /* BOTTOM NAV */
+  .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; background: rgba(8,8,16,0.95); backdrop-filter: blur(24px); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 8px 0 16px; z-index: 999; }
+  .nav-btn { display: flex; flex-direction: column; align-items: center; gap: 3px; background: none; border: none; cursor: pointer; padding: 4px 14px; transition: transform 0.2s; }
+  .nav-btn:active { transform: scale(0.92); }
+  .nav-icon { font-size: 20px; transition: transform 0.2s; }
+  .nav-label { font-size: 10px; font-weight: 400; color: var(--sub); transition: all 0.2s; }
+  .nav-btn.active .nav-label { color: var(--accent); font-weight: 700; }
+  .nav-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); margin-top: -2px; }
+
+  /* SECTIONS */
+  .section { margin-bottom: 22px; }
+  .section-header { padding: 0 18px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: flex-end; }
+  .section-title { font-size: 16px; font-weight: 800; }
+  .section-sub { font-size: 11px; color: var(--sub); margin-top: 2px; }
+  .see-all { font-size: 12px; color: var(--accent); font-weight: 600; cursor: pointer; }
+  .section-inner { padding-left: 18px; }
+
+  /* HERO CARD */
+  .hero-card { margin: 10px 16px 16px; border-radius: 20px; background: linear-gradient(135deg, #0D0D1A, #1A0D2E, #0D1A1A); padding: 22px 20px; border: 1px solid var(--border); position: relative; overflow: hidden; }
+  .hero-card::before { content: ''; position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; border-radius: 50%; background: radial-gradient(circle, rgba(255,107,53,0.28) 0%, transparent 70%); }
+  .hero-card::after { content: ''; position: absolute; bottom: -20px; left: 40px; width: 80px; height: 80px; border-radius: 50%; background: radial-gradient(circle, rgba(124,58,237,0.28) 0%, transparent 70%); }
+  .hero-eyebrow { font-size: 10px; color: var(--accent); font-weight: 700; letter-spacing: 2px; margin-bottom: 8px; }
+  .hero-title { font-size: 22px; font-weight: 800; line-height: 1.2; margin-bottom: 4px; }
+  .hero-sub { font-size: 12px; color: var(--sub); margin-bottom: 16px; }
+  .progress-bar-wrap { background: rgba(255,255,255,0.06); border-radius: 10px; height: 8px; margin-bottom: 8px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, #FF6B35, #FF3584); border-radius: 10px; transition: width 1s ease; }
+  .hero-footer { display: flex; justify-content: space-between; align-items: center; }
+  .continue-btn { background: linear-gradient(135deg, #FF6B35, #FF3584); color: #fff; border: none; border-radius: 10px; padding: 9px 18px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; transition: transform 0.2s; }
+  .continue-btn:active { transform: scale(0.96); }
+
+  /* STATS ROW */
+  .stats-row { display: flex; gap: 10px; padding: 0 16px 16px; overflow-x: auto; }
+  .stat-card { min-width: 112px; background: var(--card); border-radius: 14px; padding: 14px 12px; border: 1px solid var(--border); flex-shrink: 0; }
+  .stat-icon { font-size: 20px; margin-bottom: 6px; }
+  .stat-val { font-size: 18px; font-weight: 800; }
+  .stat-label { font-size: 10px; color: var(--sub); margin-top: 2px; }
+
+  /* COURSE CARDS */
+  .course-card { min-width: 158px; background: var(--card); border-radius: 16px; overflow: hidden; border: 1px solid var(--border); flex-shrink: 0; cursor: pointer; transition: transform 0.2s; }
+  .course-card:active { transform: scale(0.97); }
+  .course-thumb { height: 90px; display: flex; align-items: center; justify-content: center; font-size: 36px; position: relative; }
+  .hot-badge { position: absolute; top: 8px; left: 8px; background: var(--accent); border-radius: 6px; padding: 2px 7px; font-size: 9px; font-weight: 700; color: #fff; }
+  .course-prog-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: rgba(255,255,255,0.1); }
+  .course-prog-fill { height: 100%; background: linear-gradient(90deg, #FF6B35, #FF3584); }
+  .course-info { padding: 10px 11px 13px; }
+  .course-title { font-size: 12px; font-weight: 700; margin-bottom: 2px; line-height: 1.3; }
+  .course-instructor { font-size: 10px; color: var(--sub); margin-bottom: 6px; }
+  .course-meta { display: flex; justify-content: space-between; }
+  .course-rating { font-size: 10px; color: var(--gold); font-weight: 600; }
+  .course-dur { font-size: 10px; color: var(--sub); }
+  .course-pct { font-size: 10px; color: var(--accent); margin-top: 3px; font-weight: 600; }
+
+  /* INCOME STREAMS */
+  .stream-card { background: var(--card); border-radius: 18px; padding: 17px; margin-bottom: 12px; border: 1px solid var(--border); cursor: pointer; position: relative; overflow: hidden; transition: transform 0.2s; }
+  .stream-card:active { transform: scale(0.99); }
+  .stream-glow { position: absolute; top: 0; right: 0; width: 80px; height: 80px; border-radius: 50%; transform: translate(20px, -20px); }
+  .stream-inner { display: flex; align-items: flex-start; gap: 14px; }
+  .stream-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; }
+  .stream-title { font-size: 14px; font-weight: 800; margin-bottom: 3px; }
+  .stream-desc { font-size: 11px; color: var(--sub); margin-bottom: 8px; }
+  .stream-footer { display: flex; justify-content: space-between; align-items: center; }
+  .earn-badge { border-radius: 8px; padding: 4px 10px; }
+  .earn-label { font-size: 12px; font-weight: 700; }
+  .start-btn { color: #fff; border: none; border-radius: 10px; padding: 8px 14px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; transition: transform 0.15s; }
+  .start-btn:active { transform: scale(0.95); }
+
+  /* MEMBERSHIP */
+  .tier-card { background: var(--card); border-radius: 18px; padding: 18px; margin-bottom: 12px; border: 2px solid var(--border); position: relative; }
+  .tier-card.popular { border-color: var(--purple); background: linear-gradient(135deg, rgba(124,58,237,0.12), rgba(124,58,237,0.04)); }
+  .tier-popular-tag { position: absolute; top: -1px; right: 16px; background: var(--purple); color: #fff; font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 0 0 8px 8px; }
+  .tier-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .tier-name { font-size: 16px; font-weight: 800; }
+  .tier-streams { font-size: 11px; color: var(--sub); }
+  .tier-price { font-size: 22px; font-weight: 900; }
+  .tier-period { font-size: 11px; color: var(--sub); text-align: right; }
+  .tier-feature { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 12px; color: var(--sub); }
+  .tier-btn { margin-top: 12px; width: 100%; border-radius: 12px; padding: 12px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; transition: transform 0.15s; }
+  .tier-btn:active { transform: scale(0.98); }
+
+  /* AFFILIATE */
+  .aff-hero { background: linear-gradient(135deg, #0D0D1A, #1A0D2E); border-radius: 20px; padding: 20px; border: 1px solid var(--border); margin-bottom: 16px; text-align: center; position: relative; overflow: hidden; }
+  .aff-hero::before { content: ''; position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; border-radius: 50%; background: radial-gradient(circle, rgba(255,107,53,0.2) 0%, transparent 70%); }
+  .aff-total-label { font-size: 11px; color: var(--sub); margin-bottom: 4px; }
+  .aff-total { font-size: 38px; font-weight: 900; background: linear-gradient(135deg, #FF6B35, #FF3584, #7C3AED); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 4px; }
+  .aff-pending { font-size: 12px; color: var(--sub); margin-bottom: 16px; }
+  .withdraw-btn { width: 100%; background: linear-gradient(135deg, #FF6B35, #FF3584); color: #fff; border: none; border-radius: 12px; padding: 12px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; }
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .aff-stat { background: var(--card); border-radius: 14px; padding: 15px; border: 1px solid var(--border); }
+  .aff-stat-icon { font-size: 22px; margin-bottom: 6px; }
+  .aff-stat-val { font-size: 20px; font-weight: 800; }
+  .aff-stat-label { font-size: 10px; color: var(--sub); margin-top: 2px; }
+  .ref-box { background: var(--card); border-radius: 16px; padding: 16px; border: 1px solid var(--border); margin-bottom: 14px; }
+  .ref-label { font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+  .ref-link-row { background: var(--card2); border-radius: 10px; padding: 11px 14px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; border: 1px solid var(--border); }
+  .ref-link-text { font-size: 12px; color: var(--sub); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .copy-btn { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 6px 14px; font-size: 11px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; flex-shrink: 0; transition: background 0.3s; }
+  .copy-btn.copied { background: var(--green); }
+  .share-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .share-btn { background: var(--card2); color: var(--text); border: 1px solid var(--border); border-radius: 10px; padding: 10px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-family: 'Outfit', sans-serif; }
+  .comm-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .comm-row:last-child { border-bottom: none; }
+  .leaderboard { background: var(--card); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; }
+  .lb-head { padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 13px; font-weight: 700; }
+  .lb-row { display: flex; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); transition: background 0.2s; }
+  .lb-row:last-child { border-bottom: none; }
+  .lb-row.me { background: rgba(255,107,53,0.07); }
+  .lb-badge { width: 28px; font-size: 16px; text-align: center; }
+  .lb-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; margin: 0 11px; }
+  .lb-name { flex: 1; font-size: 13px; font-weight: 600; }
+  .lb-xp { font-size: 13px; font-weight: 700; color: var(--gold); }
+
+  /* PROFILE */
+  .profile-hero { background: linear-gradient(135deg, #0D0D1A, #1A0D2E); border-radius: 20px; padding: 24px 20px; border: 1px solid var(--border); margin-bottom: 16px; text-align: center; }
+  .avatar-big { width: 82px; height: 82px; border-radius: 50%; background: linear-gradient(135deg, #FF6B35, #FF3584, #7C3AED); display: flex; align-items: center; justify-content: center; font-size: 34px; font-weight: 900; margin: 0 auto 12px; }
+  .profile-name { font-size: 20px; font-weight: 800; margin-bottom: 2px; }
+  .profile-email { font-size: 13px; color: var(--sub); margin-bottom: 12px; }
+  .member-badge { display: inline-flex; background: rgba(245,158,11,0.15); border-radius: 10px; padding: 6px 14px; border: 1px solid rgba(245,158,11,0.3); font-size: 12px; font-weight: 700; }
+  .gold-text { background: linear-gradient(135deg, #F59E0B, #FCD34D); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .xp-card { background: var(--card); border-radius: 16px; padding: 16px; border: 1px solid var(--border); margin-bottom: 14px; }
+  .xp-row { display: flex; justify-content: space-between; margin-bottom: 10px; }
+  .xp-label { font-size: 12px; color: var(--sub); margin-bottom: 2px; }
+  .xp-value { font-size: 24px; font-weight: 900; }
+  .xp-bar { background: var(--card2); border-radius: 8px; height: 8px; overflow: hidden; margin-bottom: 6px; }
+  .xp-fill { height: 100%; background: linear-gradient(90deg, #F59E0B, #FF6B35); border-radius: 8px; }
+  .xp-next { font-size: 11px; color: var(--sub); }
+  .badges-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+  .badge-card { background: var(--card); border-radius: 14px; padding: 12px 8px; text-align: center; border: 1px solid var(--border); transition: opacity 0.3s; }
+  .badge-card.locked { opacity: 0.38; }
+  .badge-card.earned { border-color: rgba(245,158,11,0.35); }
+  .badge-icon { font-size: 26px; margin-bottom: 5px; }
+  .badge-title { font-size: 10px; font-weight: 700; margin-bottom: 2px; }
+  .badge-desc { font-size: 9px; color: var(--sub); }
+  .settings-list { background: var(--card); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; }
+  .setting-item { display: flex; align-items: center; padding: 15px 16px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.2s; }
+  .setting-item:hover { background: var(--card2); }
+  .setting-item:last-child { border-bottom: none; }
+  .setting-icon { font-size: 19px; margin-right: 14px; }
+  .setting-label { flex: 1; font-size: 14px; font-weight: 500; }
+  .setting-label.danger { color: #EF4444; }
+  .setting-arrow { color: var(--sub); font-size: 16px; }
+  .toggle { width: 40px; height: 22px; border-radius: 11px; position: relative; transition: background 0.3s; border: 1px solid var(--border); cursor: pointer; flex-shrink: 0; }
+  .toggle-knob { width: 18px; height: 18px; border-radius: 50%; background: #fff; position: absolute; top: 1px; transition: left 0.25s; box-shadow: 0 1px 4px rgba(0,0,0,0.4); }
+
+  /* COURSE DETAIL */
+  .course-detail { display: none; position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; height: 100vh; background: var(--bg); z-index: 900; overflow-y: auto; animation: slideUp 0.3s ease; }
+  .course-detail.active { display: block; }
+  .player-area { height: 225px; display: flex; align-items: center; justify-content: center; font-size: 64px; position: relative; overflow: hidden; }
+  .back-btn { position: absolute; top: 12px; left: 12px; background: rgba(0,0,0,0.55); border: none; border-radius: 50%; width: 36px; height: 36px; font-size: 17px; cursor: pointer; color: #fff; display: flex; align-items: center; justify-content: center; }
+  .play-btn { position: absolute; bottom: 14px; right: 14px; background: rgba(255,255,255,0.18); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.28); border-radius: 50%; width: 48px; height: 48px; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.2s; }
+  .play-btn:active { transform: scale(0.92); }
+  .speed-bar { position: absolute; bottom: 0; left: 0; right: 0; padding: 8px 16px; background: linear-gradient(transparent, rgba(0,0,0,0.82)); display: flex; gap: 14px; align-items: center; }
+  .speed-opt { font-size: 11px; color: rgba(255,255,255,0.55); cursor: pointer; }
+  .speed-opt.active { color: var(--accent); font-weight: 700; }
+  .player-actions { display: flex; gap: 14px; margin-left: auto; }
+  .player-act { font-size: 18px; cursor: pointer; }
+  .course-detail-body { padding: 16px 20px; }
+  .cd-cat { font-size: 11px; font-weight: 600; margin-bottom: 4px; }
+  .cd-title { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+  .cd-meta-row { display: flex; gap: 12px; align-items: center; margin-bottom: 12px; }
+  .cd-tags { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .cd-tag { background: var(--card2); border-radius: 8px; padding: 4px 10px; font-size: 11px; color: var(--sub); border: 1px solid var(--border); }
+  .cd-prog-label { display: flex; justify-content: space-between; margin-bottom: 6px; }
+  .cd-prog-bar { background: var(--card2); border-radius: 8px; height: 8px; overflow: hidden; margin-bottom: 16px; }
+  .module-item { background: var(--card2); border-radius: 12px; padding: 14px 16px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--border); }
+  .module-item.done { border-color: rgba(16,185,129,0.3); }
+  .module-mod { font-size: 10px; color: var(--sub); margin-bottom: 2px; }
+  .module-title { font-size: 13px; font-weight: 600; }
+  .module-lessons { font-size: 11px; color: var(--sub); margin-top: 2px; }
+  .cert-box { background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(245,158,11,0.04)); border-radius: 14px; padding: 16px; border: 1px solid rgba(245,158,11,0.3); margin-top: 16px; display: flex; align-items: center; gap: 12px; }
+
+  /* SEARCH */
+  .search-wrap { margin: 10px 16px; position: relative; }
+  .search-input { width: 100%; background: var(--card2); border: 1px solid var(--border); border-radius: 14px; padding: 13px 16px 13px 44px; color: var(--text); font-size: 14px; outline: none; font-family: 'Outfit', sans-serif; transition: border-color 0.2s; }
+  .search-input:focus { border-color: var(--accent); }
+  .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-size: 18px; }
+  .filter-row { display: flex; gap: 8px; padding: 0 16px 12px; overflow-x: auto; }
+  .filter-btn { flex-shrink: 0; background: var(--card2); color: var(--sub); border: 1px solid var(--border); border-radius: 20px; padding: 8px 16px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; font-family: 'Outfit', sans-serif; transition: all 0.2s; }
+  .filter-btn.active { background: linear-gradient(135deg, #FF6B35, #FF3584); color: #fff; border-color: transparent; }
+  .course-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 16px; }
+  .course-grid-card { background: var(--card); border-radius: 16px; overflow: hidden; border: 1px solid var(--border); cursor: pointer; transition: transform 0.2s; }
+  .course-grid-card:active { transform: scale(0.97); }
+  .grid-thumb { height: 90px; display: flex; align-items: center; justify-content: center; font-size: 36px; position: relative; }
+  .grid-info { padding: 10px 10px 12px; }
+  .grid-title { font-size: 12px; font-weight: 700; margin-bottom: 3px; line-height: 1.3; }
+  .grid-meta { display: flex; justify-content: space-between; }
+
+  /* LIVE BANNER */
+  .live-banner { margin: 0 16px 16px; border-radius: 16px; background: linear-gradient(135deg, #1A0040, #0A0020); padding: 16px; border: 1px solid rgba(124,58,237,0.4); position: relative; overflow: hidden; }
+  .live-tag { position: absolute; top: 0; right: 0; background: linear-gradient(135deg, #FF3584, #7C3AED); padding: 4px 12px; font-size: 10px; font-weight: 700; border-bottom-left-radius: 10px; animation: pulse 2s infinite; }
+  .live-time { font-size: 11px; color: #A78BFA; font-weight: 600; margin-bottom: 6px; }
+  .live-title { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
+  .live-meta { font-size: 12px; color: var(--sub); margin-bottom: 12px; }
+  .live-btn { width: 100%; background: linear-gradient(135deg, #7C3AED, #FF3584); color: #fff; border: none; border-radius: 10px; padding: 10px 20px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; transition: transform 0.2s; }
+  .live-btn:active { transform: scale(0.98); }
+
+  /* ANIMATIONS */
+  @keyframes slideUp { from { transform: translateY(30px) translateX(-50%); opacity: 0; } to { transform: translateY(0) translateX(-50%); opacity: 1; } }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.55; } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .page { animation: fadeIn 0.35s ease; }
+
+  /* LIGHT MODE */
+  body.light { --bg: #F5F5FC; --card: #FFFFFF; --card2: #EEEEF8; --border: #DDDDF0; --text: #0A0A1A; --sub: #6666AA; }
+  body.light .bottom-nav { background: rgba(245,245,252,0.95); }
+
+  /* GRADIENT TEXT HELPERS */
+  .grad { background: linear-gradient(135deg, #FF6B35, #FF3584, #7C3AED); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+</style>
+</head>
+<body>
+
+<div class="app" id="app">
+
+  <!-- NOTIFICATION BAR -->
+  <div class="notif-bar" id="notifBar">
+    <span>🔥 LIVE CLASS Today 7PM — AI Marketing Workshop</span>
+    <button onclick="document.getElementById('notifBar').remove()">✕</button>
+  </div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">
+      <div class="logo-icon">⚡</div>
+      <div>
+        <div class="logo-text">Leadzin Academy</div>
+        <div class="logo-tagline">Learn • Build • Earn</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="pill fire">🔥 <span>7</span></div>
+      <div class="pill xp">⚡ <span>7,200</span></div>
+      <button class="mode-btn" onclick="toggleMode()" id="modeBtn">☀️</button>
+    </div>
+  </div>
+
+  <!-- PAGE CONTENT -->
+  <div class="page-content" id="pageContent">
+
+    <!-- ========== HOME PAGE ========== -->
+    <div id="page-home" class="page">
+      <!-- Hero -->
+      <div class="hero-card">
+        <div class="hero-eyebrow">YOUR JOURNEY</div>
+        <div class="hero-title">Welcome back,<br><span class="grad">Aryan! 👋</span></div>
+        <div class="hero-sub">You're 65% through Facebook Ads Mastery</div>
+        <div class="progress-bar-wrap"><div class="progress-fill" style="width:65%"></div></div>
+        <div class="hero-footer">
+          <span style="font-size:12px;color:var(--sub)">14/24 lessons complete</span>
+          <button class="continue-btn" onclick="openCourse(0)">Continue ▶</button>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-icon">📚</div><div class="stat-val" style="color:#3B82F6">6</div><div class="stat-label">Courses Enrolled</div></div>
+        <div class="stat-card"><div class="stat-icon">⏱️</div><div class="stat-val" style="color:#10B981">42h</div><div class="stat-label">Hours Learned</div></div>
+        <div class="stat-card"><div class="stat-icon">🏅</div><div class="stat-val" style="color:#F59E0B">2</div><div class="stat-label">Certificates</div></div>
+        <div class="stat-card"><div class="stat-icon">💸</div><div class="stat-val" style="color:#FF6B35">₹4.2K</div><div class="stat-label">Referral Earn</div></div>
+      </div>
+
+      <!-- Continue Watching -->
+      <div class="section">
+        <div class="section-header"><div><div class="section-title">Continue Watching</div><div class="section-sub">Pick up where you left off</div></div><span class="see-all">See all ›</span></div>
+        <div class="section-inner scroll-x" id="continueRow"></div>
+      </div>
+
+      <!-- Trending -->
+      <div class="section">
+        <div class="section-header"><div><div class="section-title">🔥 Trending Now</div><div class="section-sub">Most popular this week</div></div><span class="see-all">See all ›</span></div>
+        <div class="section-inner scroll-x" id="trendingRow"></div>
+      </div>
+
+      <!-- Income Streams Mini -->
+      <div class="section">
+        <div class="section-header"><div><div class="section-title">💰 7 Income Streams</div><div class="section-sub">Start earning today</div></div><span class="see-all" onclick="switchTab('business')">See all ›</span></div>
+        <div class="section-inner scroll-x" id="streamsRow"></div>
+      </div>
+
+      <!-- Live Banner -->
+      <div class="live-banner">
+        <div class="live-tag">● LIVE</div>
+        <div class="live-time">TODAY 7:00 PM</div>
+        <div class="live-title">AI Marketing Masterclass</div>
+        <div class="live-meta">with Arjun Mehta • 243 registered</div>
+        <button class="live-btn">Register Now — FREE</button>
+      </div>
+
+      <!-- Leaderboard Preview -->
+      <div class="section">
+        <div class="section-header"><div><div class="section-title">🏆 Top Learners</div><div class="section-sub">This month's leaders</div></div><span class="see-all">See all ›</span></div>
+        <div style="margin:0 16px" class="leaderboard" id="lbHome"></div>
+      </div>
+    </div>
+
+    <!-- ========== COURSES PAGE ========== -->
+    <div id="page-courses" class="page" style="display:none">
+      <div class="search-wrap"><span class="search-icon">🔍</span><input class="search-input" placeholder="Search courses, skills..." oninput="filterCourses(this.value)"></div>
+      <div class="filter-row" id="filterRow"></div>
+      <div style="padding:0 16px;font-size:13px;color:var(--sub);margin-bottom:12px" id="courseCount"></div>
+      <div class="course-grid" id="courseGrid"></div>
+    </div>
+
+    <!-- ========== BUSINESS PAGE ========== -->
+    <div id="page-business" class="page" style="display:none">
+      <div style="padding:14px 18px 20px">
+        <div style="font-size:22px;font-weight:900;margin-bottom:4px">Business <span class="grad">Opportunities</span></div>
+        <div style="font-size:13px;color:var(--sub)">7 proven income streams to build your empire</div>
+      </div>
+      <div style="padding:0 16px" id="streamsList"></div>
+      <div style="padding:0 16px">
+        <div style="font-size:18px;font-weight:800;margin:8px 0 16px">Membership Plans</div>
+        <div id="tiersList"></div>
+      </div>
+    </div>
+
+    <!-- ========== AFFILIATE PAGE ========== -->
+    <div id="page-affiliate" class="page" style="display:none">
+      <div style="padding:14px 18px 20px">
+        <div style="font-size:22px;font-weight:900;margin-bottom:4px">Affiliate <span class="grad">Dashboard</span></div>
+        <div style="font-size:13px;color:var(--sub)">Refer & earn up to 40% commission</div>
+      </div>
+      <div style="padding:0 16px">
+        <!-- Earnings Hero -->
+        <div class="aff-hero">
+          <div class="aff-total-label">Total Earned</div>
+          <div class="aff-total">₹4,200</div>
+          <div class="aff-pending">Pending: <span style="color:#F59E0B;font-weight:700">₹1,800</span></div>
+          <button class="withdraw-btn">Withdraw Earnings</button>
+        </div>
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+          <div class="aff-stat"><div class="aff-stat-icon">👥</div><div class="aff-stat-val" style="color:#3B82F6">23</div><div class="aff-stat-label">Total Referrals</div></div>
+          <div class="aff-stat"><div class="aff-stat-icon">✅</div><div class="aff-stat-val" style="color:#10B981">8</div><div class="aff-stat-label">Conversions</div></div>
+          <div class="aff-stat"><div class="aff-stat-icon">📈</div><div class="aff-stat-val" style="color:#F59E0B">₹1,800</div><div class="aff-stat-label">This Month</div></div>
+          <div class="aff-stat"><div class="aff-stat-icon">🎯</div><div class="aff-stat-val" style="color:#FF6B35">34%</div><div class="aff-stat-label">Conversion Rate</div></div>
+        </div>
+        <!-- Referral Link -->
+        <div class="ref-box">
+          <div class="ref-label">Your Referral Link</div>
+          <div class="ref-link-row">
+            <span class="ref-link-text">leadzin.in/ref/USR7842</span>
+            <button class="copy-btn" id="copyBtn" onclick="copyLink()">Copy</button>
+          </div>
+          <div class="share-grid">
+            <button class="share-btn">💬 WhatsApp</button>
+            <button class="share-btn">📸 Instagram</button>
+            <button class="share-btn">✈️ Telegram</button>
+            <button class="share-btn">🔗 Copy Link</button>
+          </div>
+        </div>
+        <!-- Commission Table -->
+        <div class="ref-box" style="margin-bottom:14px">
+          <div class="ref-label" style="margin-bottom:12px">Commission Structure</div>
+          <div class="comm-row"><span style="font-size:13px;color:var(--sub)">Classic Plan</span><span style="font-size:13px;font-weight:800;color:#6B7280">20%</span></div>
+          <div class="comm-row"><span style="font-size:13px;color:var(--sub)">Ultimate Plan</span><span style="font-size:13px;font-weight:800;color:#3B82F6">30%</span></div>
+          <div class="comm-row"><span style="font-size:13px;color:var(--sub)">Premium Plan</span><span style="font-size:13px;font-weight:800;color:#8B5CF6">35%</span></div>
+          <div class="comm-row"><span style="font-size:13px;color:var(--sub)">Supreme Plan</span><span style="font-size:13px;font-weight:800;color:#F59E0B">40%</span></div>
+        </div>
+        <!-- Leaderboard -->
+        <div class="leaderboard" id="lbAffiliate" style="margin-bottom:24px"></div>
+      </div>
+    </div>
+
+    <!-- ========== PROFILE PAGE ========== -->
+    <div id="page-profile" class="page" style="display:none">
+      <div style="padding:12px 16px">
+        <div class="profile-hero">
+          <div class="avatar-big">A</div>
+          <div class="profile-name">Aryan Kapoor</div>
+          <div class="profile-email">aryan@email.com</div>
+          <div class="member-badge"><span class="gold-text">⭐ SUPREME MEMBER</span></div>
+        </div>
+        <!-- XP -->
+        <div class="xp-card">
+          <div class="xp-row">
+            <div><div class="xp-label">Current XP</div><div class="xp-value" style="color:#F59E0B">⚡ 7,200</div></div>
+            <div style="text-align:right"><div class="xp-label">Level</div><div class="xp-value grad">14</div></div>
+          </div>
+          <div class="xp-bar"><div class="xp-fill" style="width:72%"></div></div>
+          <div class="xp-next">2,800 XP to Level 15</div>
+        </div>
+        <!-- Achievements -->
+        <div style="font-size:15px;font-weight:700;margin-bottom:12px">Achievements</div>
+        <div class="badges-grid" id="badgesGrid"></div>
+        <!-- Settings -->
+        <div class="settings-list" id="settingsList"></div>
+      </div>
+    </div>
+
+  </div><!-- end page-content -->
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" id="nav-home" onclick="switchTab('home')">
+      <span class="nav-icon">⊞</span>
+      <span class="nav-label">Home</span>
+      <div class="nav-dot" id="dot-home"></div>
+    </button>
+    <button class="nav-btn" id="nav-courses" onclick="switchTab('courses')">
+      <span class="nav-icon">📚</span>
+      <span class="nav-label">Learn</span>
+      <div class="nav-dot" style="display:none" id="dot-courses"></div>
+    </button>
+    <button class="nav-btn" id="nav-business" onclick="switchTab('business')">
+      <span class="nav-icon">💰</span>
+      <span class="nav-label">Earn</span>
+      <div class="nav-dot" style="display:none" id="dot-business"></div>
+    </button>
+    <button class="nav-btn" id="nav-affiliate" onclick="switchTab('affiliate')">
+      <span class="nav-icon">🔗</span>
+      <span class="nav-label">Refer</span>
+      <div class="nav-dot" style="display:none" id="dot-affiliate"></div>
+    </button>
+    <button class="nav-btn" id="nav-profile" onclick="switchTab('profile')">
+      <span class="nav-icon">👤</span>
+      <span class="nav-label">Profile</span>
+      <div class="nav-dot" style="display:none" id="dot-profile"></div>
+    </button>
+  </nav>
+
+</div><!-- end app -->
+
+<!-- COURSE DETAIL OVERLAY -->
+<div class="course-detail" id="courseDetail">
+  <div class="player-area" id="playerArea">
+    <button class="back-btn" onclick="closeCourse()">←</button>
+    <span id="playerEmoji" style="font-size:64px"></span>
+    <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
+    <div class="speed-bar">
+      <span class="speed-opt" onclick="setSpeed(this,'0.5x')">0.5x</span>
+      <span class="speed-opt active" onclick="setSpeed(this,'1x')">1x</span>
+      <span class="speed-opt" onclick="setSpeed(this,'1.5x')">1.5x</span>
+      <span class="speed-opt" onclick="setSpeed(this,'2x')">2x</span>
+      <div class="player-actions">
+        <span class="player-act">📝</span>
+        <span class="player-act">🔖</span>
+        <span class="player-act">⬇</span>
+      </div>
+    </div>
+  </div>
+  <div class="course-detail-body">
+    <div class="cd-cat" id="cdCat"></div>
+    <div class="cd-title" id="cdTitle"></div>
+    <div class="cd-meta-row">
+      <span style="font-size:12px;color:var(--sub)" id="cdInstructor"></span>
+      <span style="font-size:12px;color:#F59E0B;font-weight:600" id="cdRating"></span>
+      <span style="font-size:12px;color:var(--sub)" id="cdReviews"></span>
+    </div>
+    <div class="cd-tags" id="cdTags"></div>
+    <div id="cdProgSection" style="display:none">
+      <div class="cd-prog-label"><span style="font-size:12px;font-weight:600">Your Progress</span><span style="font-size:12px;color:#FF6B35;font-weight:700" id="cdProgPct"></span></div>
+      <div class="cd-prog-bar"><div class="progress-fill" id="cdProgFill"></div></div>
+    </div>
+    <div style="font-size:15px;font-weight:700;margin-bottom:12px">Course Curriculum</div>
+    <div id="cdModules"></div>
+    <div class="cert-box">
+      <span style="font-size:28px">🏅</span>
+      <div>
+        <div style="font-size:13px;font-weight:700" class="gold-text">Certificate Eligible</div>
+        <div style="font-size:11px;color:var(--sub)">Complete all modules to earn your certificate</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===========================
+// DATA
+// ===========================
+const courses = [
+  {id:0, title:"Facebook Ads Mastery", cat:"Digital Marketing", instructor:"Rahul Sharma", lessons:24, duration:"6h 30m", level:"Intermediate", rating:4.9, reviews:1204, color:"#1877F2", emoji:"📘", progress:65, trending:true},
+  {id:1, title:"Beginner Lead Generation", cat:"Lead Generation", instructor:"Priya Verma", lessons:18, duration:"4h 15m", level:"Beginner", rating:4.8, reviews:892, color:"#FF6B35", emoji:"🎯", progress:30, trending:true},
+  {id:2, title:"AI Avatar Creation", cat:"AI & Automation", instructor:"Arjun Mehta", lessons:15, duration:"3h 45m", level:"Beginner", rating:4.9, reviews:2341, color:"#7C3AED", emoji:"🤖", progress:0, trending:true},
+  {id:3, title:"YouTube Automation", cat:"Online Business", instructor:"Sneha Patel", lessons:32, duration:"9h 20m", level:"Advanced", rating:4.7, reviews:1567, color:"#FF0000", emoji:"▶️", progress:12, trending:false},
+  {id:4, title:"Affiliate Marketing Pro", cat:"Online Business", instructor:"Vikram Das", lessons:28, duration:"7h 10m", level:"Intermediate", rating:4.8, reviews:2103, color:"#10B981", emoji:"💰", progress:80, trending:true},
+  {id:5, title:"Instagram Growth", cat:"Digital Marketing", instructor:"Ananya Singh", lessons:20, duration:"5h 00m", level:"Beginner", rating:4.6, reviews:987, color:"#E1306C", emoji:"📸", progress:0, trending:false},
+  {id:6, title:"AI Content Tools", cat:"AI & Automation", instructor:"Karan Joshi", lessons:22, duration:"5h 30m", level:"Intermediate", rating:4.9, reviews:3102, color:"#F59E0B", emoji:"✨", progress:45, trending:true},
+  {id:7, title:"Email Marketing", cat:"Digital Marketing", instructor:"Meera Nair", lessons:16, duration:"4h 00m", level:"Beginner", rating:4.7, reviews:743, color:"#06B6D4", emoji:"📧", progress:0, trending:false},
+  {id:8, title:"Advanced Lead Gen", cat:"Lead Generation", instructor:"Rohit Kumar", lessons:35, duration:"10h 45m", level:"Advanced", rating:4.9, reviews:1890, color:"#EF4444", emoji:"🚀", progress:0, trending:true},
+  {id:9, title:"Canva Design Mastery", cat:"Online Business", instructor:"Divya Roy", lessons:19, duration:"4h 30m", level:"Beginner", rating:4.8, reviews:1456, color:"#8B5CF6", emoji:"🎨", progress:90, trending:false},
+  {id:10, title:"Google Ads Pro", cat:"Digital Marketing", instructor:"Amit Shah", lessons:21, duration:"5h 15m", level:"Intermediate", rating:4.7, reviews:634, color:"#4285F4", emoji:"🔎", progress:0, trending:false},
+  {id:11, title:"AI Marketing Tools", cat:"AI & Automation", instructor:"Riya Bose", lessons:17, duration:"4h 20m", level:"Beginner", rating:4.8, reviews:1120, color:"#EC4899", emoji:"🧠", progress:0, trending:true},
+];
+
+const incomeStreams = [
+  {id:1, title:"Digital Products", icon:"📦", desc:"Create & sell ebooks, templates, courses", earning:"₹50K–2L/mo", color:"#F59E0B"},
+  {id:2, title:"Dropshipping", icon:"🛒", desc:"Sell products without inventory", earning:"₹30K–1.5L/mo", color:"#10B981"},
+  {id:3, title:"Website Builder", icon:"🌐", desc:"Build websites for local businesses", earning:"₹40K–1L/mo", color:"#3B82F6"},
+  {id:4, title:"Leadzinkart", icon:"🛍️", desc:"Full ecommerce store system", earning:"₹60K–3L/mo", color:"#EC4899"},
+  {id:5, title:"WhatsApp Bots", icon:"💬", desc:"Automate businesses with chatbots", earning:"₹25K–80K/mo", color:"#25D366"},
+  {id:6, title:"Freelancing", icon:"💼", desc:"Offer skills on global platforms", earning:"₹35K–1.2L/mo", color:"#8B5CF6"},
+  {id:7, title:"Travel Business", icon:"✈️", desc:"Build a travel agency with Tripzin", earning:"₹45K–2L/mo", color:"#F97316"},
+];
+
+const tiers = [
+  {name:"Classic", price:"₹999", period:"/mo", streams:2, color:"#6B7280", features:["Basic courses","2 income streams","Community access","Mobile app"], popular:false},
+  {name:"Ultimate", price:"₹2,499", period:"/mo", streams:4, color:"#3B82F6", features:["Advanced training","4 income streams","Live classes","Priority support"], popular:false},
+  {name:"Premium", price:"₹4,999", period:"/mo", streams:5, color:"#8B5CF6", features:["All courses","5 income streams","Mentorship calls","Affiliate system"], popular:true},
+  {name:"Supreme", price:"₹9,999", period:"/mo", streams:7, color:"#F59E0B", features:["Full ecosystem","7 income streams","1:1 mentorship","VIP community","Revenue sharing"], popular:false},
+];
+
+const leaderboard = [
+  {rank:1, name:"Aryan K.", xp:12450, avatar:"AK", badge:"🥇"},
+  {rank:2, name:"Priya M.", xp:11200, avatar:"PM", badge:"🥈"},
+  {rank:3, name:"Rohit D.", xp:10800, avatar:"RD", badge:"🥉"},
+  {rank:4, name:"Sneha T.", xp:9500, avatar:"ST", badge:"4️⃣"},
+  {rank:5, name:"You", xp:7200, avatar:"YO", badge:"5️⃣", isUser:true},
+];
+
+const achievements = [
+  {icon:"🏆", title:"First Login", desc:"Welcome!", earned:true},
+  {icon:"🎯", title:"First Lesson", desc:"Started learning", earned:true},
+  {icon:"🔥", title:"7-Day Streak", desc:"Consistent learner", earned:true},
+  {icon:"⚡", title:"Speed Learner", desc:"5 lessons in a day", earned:false},
+  {icon:"💎", title:"Diamond Coder", desc:"Complete 10 courses", earned:false},
+  {icon:"🌟", title:"Top Affiliate", desc:"5 referrals", earned:false},
+];
+
+const modules = [
+  {mod:"Module 1", title:"Introduction & Setup", lessons:4, done:true},
+  {mod:"Module 2", title:"Core Concepts", lessons:6, done:true},
+  {mod:"Module 3", title:"Advanced Strategies", lessons:8, done:false},
+  {mod:"Module 4", title:"Live Case Studies", lessons:6, done:false},
+];
+
+const categories = ["All","Digital Marketing","Lead Generation","AI & Automation","Online Business"];
+
+// ===========================
+// STATE
+// ===========================
+let currentTab = "home";
+let isDark = true;
+let currentCategory = "All";
+let isPlaying = false;
+
+// ===========================
+// RENDER
+// ===========================
+function buildCourseCard(c, showProgress) {
+  return `<div class="course-card" onclick="openCourse(${c.id})">
+    <div class="course-thumb" style="background:linear-gradient(135deg,${c.color}44,${c.color}11)">
+      ${c.emoji}
+      ${c.trending ? '<div class="hot-badge">HOT</div>' : ''}
+      ${showProgress && c.progress > 0 ? `<div class="course-prog-bar"><div class="course-prog-fill" style="width:${c.progress}%"></div></div>` : ''}
+    </div>
+    <div class="course-info">
+      <div class="course-title">${c.title}</div>
+      <div class="course-instructor">${c.instructor}</div>
+      <div class="course-meta">
+        <span class="course-rating">★ ${c.rating}</span>
+        <span class="course-dur">${c.duration}</span>
+      </div>
+      ${showProgress && c.progress > 0 ? `<div class="course-pct">${c.progress}% complete</div>` : ''}
+    </div>
+  </div>`;
+}
+
+function buildGridCard(c) {
+  return `<div class="course-grid-card" onclick="openCourse(${c.id})">
+    <div class="grid-thumb" style="background:linear-gradient(135deg,${c.color}44,${c.color}11)">
+      ${c.emoji}
+      ${c.trending ? '<div class="hot-badge">HOT</div>' : ''}
+    </div>
+    <div class="grid-info">
+      <div class="grid-title">${c.title}</div>
+      <div style="font-size:10px;color:var(--sub);margin-bottom:5px">${c.instructor}</div>
+      <div class="grid-meta">
+        <span class="course-rating">★ ${c.rating}</span>
+        <span class="course-dur">${c.lessons} lessons</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+function buildLeaderboard(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.innerHTML = `<div class="lb-head">🏆 ${id === 'lbAffiliate' ? 'Top Affiliates' : 'Top Learners'}</div>` +
+    leaderboard.map((u,i) => `
+      <div class="lb-row ${u.isUser ? 'me' : ''}">
+        <div class="lb-badge">${u.badge}</div>
+        <div class="lb-avatar" style="background:${u.isUser ? 'linear-gradient(135deg,#FF6B35,#FF3584)' : 'linear-gradient(135deg,#7C3AED,#3B82F6)'}">${u.avatar}</div>
+        <div class="lb-name">${u.name}${u.isUser ? ' <span style="color:#FF6B35;font-size:10px">← You</span>' : ''}</div>
+        <div class="lb-xp">⚡ ${u.xp.toLocaleString()}</div>
+      </div>`).join('');
+}
+
+function buildHome() {
+  // Continue watching
+  document.getElementById('continueRow').innerHTML = courses.filter(c => c.progress > 0).map(c => buildCourseCard(c, true)).join('');
+  // Trending
+  document.getElementById('trendingRow').innerHTML = courses.filter(c => c.trending).map(c => buildCourseCard(c, false)).join('');
+  // Income streams mini
+  document.getElementById('streamsRow').innerHTML = incomeStreams.slice(0,5).map(s =>
+    `<div onclick="switchTab('business')" style="min-width:130px;background:var(--card);border-radius:16px;padding:16px 12px;border:1px solid var(--border);cursor:pointer;flex-shrink:0">
+      <div style="font-size:28px;margin-bottom:8px">${s.icon}</div>
+      <div style="font-size:13px;font-weight:700;margin-bottom:4px">${s.title}</div>
+      <div style="font-size:11px;color:${s.color};font-weight:600">${s.earning}</div>
+    </div>`).join('');
+  buildLeaderboard('lbHome');
+}
+
+function buildCourses() {
+  // Filters
+  document.getElementById('filterRow').innerHTML = categories.map(cat =>
+    `<button class="filter-btn ${cat === currentCategory ? 'active' : ''}" onclick="setCategory('${cat}')">${cat}</button>`).join('');
+  renderCourseGrid(courses);
+}
+
+function renderCourseGrid(list) {
+  const filtered = currentCategory === 'All' ? list : list.filter(c => c.cat === currentCategory);
+  document.getElementById('courseCount').textContent = `${filtered.length} courses available`;
+  document.getElementById('courseGrid').innerHTML = filtered.map(c => buildGridCard(c)).join('');
+}
+
+function setCategory(cat) {
+  currentCategory = cat;
+  buildCourses();
+}
+
+function filterCourses(q) {
+  const filtered = q ? courses.filter(c => c.title.toLowerCase().includes(q.toLowerCase()) || c.cat.toLowerCase().includes(q.toLowerCase())) : courses;
+  document.getElementById('courseGrid').innerHTML = filtered.map(c => buildGridCard(c)).join('');
+  document.getElementById('courseCount').textContent = `${filtered.length} courses available`;
+}
+
+function buildBusiness() {
+  document.getElementById('streamsList').innerHTML = incomeStreams.map(s => `
+    <div class="stream-card">
+      <div class="stream-glow" style="background:radial-gradient(circle,${s.color}18,transparent 70%)"></div>
+      <div class="stream-inner">
+        <div class="stream-icon" style="background:${s.color}20">${s.icon}</div>
+        <div style="flex:1">
+          <div class="stream-title">Stream ${s.id}: ${s.title}</div>
+          <div class="stream-desc">${s.desc}</div>
+          <div class="stream-footer">
+            <div class="earn-badge" style="background:${s.color}20"><span class="earn-label" style="color:${s.color}">${s.earning}</span></div>
+            <button class="start-btn" style="background:${s.color}">Start Now →</button>
+          </div>
+        </div>
+      </div>
+    </div>`).join('');
+
+  document.getElementById('tiersList').innerHTML = tiers.map(t => `
+    <div class="tier-card ${t.popular ? 'popular' : ''}" style="border-color:${t.popular ? t.color : 'var(--border)'}">
+      ${t.popular ? '<div class="tier-popular-tag" style="background:'+t.color+'">MOST POPULAR</div>' : ''}
+      <div class="tier-head">
+        <div><div class="tier-name">${t.name}</div><div class="tier-streams">${t.streams} income streams</div></div>
+        <div><div class="tier-price" style="color:${t.color}">${t.price}</div><div class="tier-period">${t.period}</div></div>
+      </div>
+      ${t.features.map(f => `<div class="tier-feature"><span style="color:${t.color};font-size:14px">✓</span>${f}</div>`).join('')}
+      <button class="tier-btn" style="background:${t.popular ? t.color : 'transparent'};color:${t.popular ? '#fff' : t.color};border:2px solid ${t.color}">Get ${t.name}</button>
+    </div>`).join('');
+}
+
+function buildProfile() {
+  document.getElementById('badgesGrid').innerHTML = achievements.map(a =>
+    `<div class="badge-card ${a.earned ? 'earned' : 'locked'}">
+      <div class="badge-icon" style="${!a.earned ? 'filter:grayscale(1)' : ''}">${a.icon}</div>
+      <div class="badge-title">${a.title}</div>
+      <div class="badge-desc">${a.desc}</div>
+    </div>`).join('');
+
+  const settings = [
+    {label:"My Certificates", icon:"🏅"},
+    {label:"Downloaded Courses", icon:"⬇️"},
+    {label:"Payment History", icon:"💳"},
+    {label:"Notifications", icon:"🔔"},
+    {label:"Dark Mode", icon: isDark ? "🌙" : "☀️", toggle:true},
+    {label:"Help & Support", icon:"💬"},
+    {label:"Sign Out", icon:"🚪", danger:true},
+  ];
+  document.getElementById('settingsList').innerHTML = settings.map((s,i) => `
+    <div class="setting-item" onclick="${s.toggle ? 'toggleMode()' : ''}">
+      <span class="setting-icon">${s.icon}</span>
+      <span class="setting-label ${s.danger ? 'danger' : ''}">${s.label}</span>
+      ${s.toggle ? `<div class="toggle" style="background:${isDark ? 'var(--purple)' : 'var(--card2)'}"><div class="toggle-knob" style="left:${isDark ? '20px' : '1px'}"></div></div>` : '<span class="setting-arrow">›</span>'}
+    </div>`).join('');
+}
+
+buildLeaderboard('lbAffiliate');
+
+// ===========================
+// NAVIGATION
+// ===========================
+function switchTab(tab) {
+  const pages = ['home','courses','business','affiliate','profile'];
+  pages.forEach(p => {
+    document.getElementById(`page-${p}`).style.display = p === tab ? 'block' : 'none';
+    document.getElementById(`nav-${p}`).classList.toggle('active', p === tab);
+    document.getElementById(`dot-${p}`).style.display = p === tab ? 'block' : 'none';
+  });
+  currentTab = tab;
+  document.getElementById('pageContent').scrollTop = 0;
+
+  if (tab === 'home') buildHome();
+  if (tab === 'courses') buildCourses();
+  if (tab === 'business') buildBusiness();
+  if (tab === 'profile') buildProfile();
+}
+
+// ===========================
+// COURSE DETAIL
+// ===========================
+function openCourse(id) {
+  const c = courses[id];
+  const detail = document.getElementById('courseDetail');
+  document.getElementById('playerArea').style.background = `linear-gradient(135deg,${c.color}44,#000)`;
+  document.getElementById('playerEmoji').textContent = c.emoji;
+  document.getElementById('cdCat').textContent = c.cat;
+  document.getElementById('cdCat').style.color = c.color;
+  document.getElementById('cdTitle').textContent = c.title;
+  document.getElementById('cdInstructor').textContent = `by ${c.instructor}`;
+  document.getElementById('cdRating').textContent = `★ ${c.rating}`;
+  document.getElementById('cdReviews').textContent = `(${c.reviews.toLocaleString()})`;
+  document.getElementById('cdTags').innerHTML = [c.lessons+' lessons', c.duration, c.level].map(t =>
+    `<span class="cd-tag">${t}</span>`).join('');
+
+  const ps = document.getElementById('cdProgSection');
+  if (c.progress > 0) {
+    ps.style.display = 'block';
+    document.getElementById('cdProgPct').textContent = c.progress + '%';
+    document.getElementById('cdProgFill').style.width = c.progress + '%';
+  } else { ps.style.display = 'none'; }
+
+  document.getElementById('cdModules').innerHTML = modules.map(m =>
+    `<div class="module-item ${m.done ? 'done' : ''}">
+      <div>
+        <div class="module-mod">${m.mod}</div>
+        <div class="module-title">${m.title}</div>
+        <div class="module-lessons">${m.lessons} lessons</div>
+      </div>
+      <div style="font-size:20px">${m.done ? '✅' : '🔒'}</div>
+    </div>`).join('');
+
+  detail.classList.add('active');
+  document.getElementById('pageContent').style.overflow = 'hidden';
+}
+
+function closeCourse() {
+  document.getElementById('courseDetail').classList.remove('active');
+  document.getElementById('pageContent').style.overflow = '';
+  isPlaying = false;
+  document.getElementById('playBtn').textContent = '▶';
+}
+
+function togglePlay() {
+  isPlaying = !isPlaying;
+  document.getElementById('playBtn').textContent = isPlaying ? '⏸' : '▶';
+}
+
+function setSpeed(el, s) {
+  document.querySelectorAll('.speed-opt').forEach(e => e.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ===========================
+// AFFILIATE
+// ===========================
+function copyLink() {
+  const btn = document.getElementById('copyBtn');
+  btn.textContent = 'Copied!';
+  btn.classList.add('copied');
+  setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+}
+
+// ===========================
+// DARK MODE
+// ===========================
+function toggleMode() {
+  isDark = !isDark;
+  document.body.classList.toggle('light', !isDark);
+  document.getElementById('modeBtn').textContent = isDark ? '☀️' : '🌙';
+  if (currentTab === 'profile') buildProfile();
+}
+
+// ===========================
+// INIT
+// ===========================
+buildHome();
+buildLeaderboard('lbAffiliate');
+</script>
+</body>
+</html>
